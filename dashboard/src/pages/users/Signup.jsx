@@ -38,8 +38,6 @@ export default function Signup({setUser}) {
             alert("Fields must not be empty")
             return;
         }
-
-        alert("Trying");
         try {
             const response = await axios.post('http://localhost:1337/users/signup', formData);
             setUsername('');
@@ -58,8 +56,7 @@ export default function Signup({setUser}) {
             message={dialogMessage} />
 
         <Box sx={styles.container}>
-            <Button onClick={() => setShowDialog(true)}>Test</Button>
-
+    
         <Card sx={styles.card}>
         <CardContent>
             <Typography variant="h5" align="center" gutterBottom>

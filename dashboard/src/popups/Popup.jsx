@@ -13,6 +13,7 @@ import AddEquipment from './AddEquipment';
 import RentalSearchPopup from './RentalSearchPopup';
 import RentalSearchTable from './RentalSearchTable';
 import Borrow from './Borrow';
+import ModifyBorrowStatus from './ModifyBorrowStatus';
 
 export function Popup2({ open, setOpen }) {
     const handleClose = () => {
@@ -34,8 +35,9 @@ export default function Popup({
 
     rentalSearch,
     
-    borrow, refresh
+    borrow, refresh,
 
+    modifyBorrowStatus
     }) {
     const [secondaryOpen, setSecondaryOpen] = useState(false);
     const [secondaryMessage, setSecondaryMessage] = useState('');
@@ -89,6 +91,16 @@ export default function Popup({
                     close={handleClose}
                     displaySuccessMessage={displaySuccessMessage}
                     displayErrorMessage={displayErrorMessage}/>
+            );
+        }
+        if (modifyBorrowStatus) {
+            return (
+                <ModifyBorrowStatus
+                    data={data}
+                    refresh={refresh}
+                    close={handleClose}
+                    displaySuccessMessage={displaySuccessMessage}
+                    displayErrorMessage={displayErrorMessage} />
             );
         }
 

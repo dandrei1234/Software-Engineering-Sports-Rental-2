@@ -13,12 +13,11 @@ exports.login = async (req, res) => {
     try {
         const [rows] = await exports.pool.execute('SELECT fullname AS name, email, role, password FROM users_tbl WHERE email=?', [email]);
 
-        if (rows[0].length === 0) {
+        if (!rows[0]) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
 
-        const selectedPassword = rows[0].password;
-        const isMatch = await bcrypt.compare(password, selectedPassword);
+        const isMatch = await bcrypt.compare(password, rows[0].password);
 
         if (!isMatch) {
             return res.status(401).json({ message: "Invalid email or password" });

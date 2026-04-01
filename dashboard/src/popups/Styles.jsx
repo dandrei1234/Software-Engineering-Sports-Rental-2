@@ -30,12 +30,29 @@ export const ActionBox = styled(Box)(({ theme }) => ({
 }));
 
 export const MyButton = styled(Button)(() => ({
-    backgroundColor: "red",
+    backgroundColor: "#2d7cf1",
     color: "white",
     '&:hover': {
-        backgroundColor: "#2777b2"
+        backgroundColor: "#5e9eff"
     }
 }));
+
+export const RedButton = styled(Button)(() => ({
+    backgroundColor: "#e96262",
+    color: "white",
+    '&:hover': {
+        backgroundColor: "#e96262"
+    }
+}));
+
+export const OrangeButton = styled(Button)(() => ({
+    backgroundColor: "#eb8c33",
+    color: "white",
+    '&:hover': {
+        backgroundColor: "#f0a45c"
+    }
+}));
+
 
 export default function Styles() {
     return <></>;

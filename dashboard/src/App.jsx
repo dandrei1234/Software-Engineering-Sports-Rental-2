@@ -16,6 +16,7 @@ import BorrowOptions from './pages/rentals/BorrowOptions';
 import Popup from './popups/Popup';
 import PopupTest from './popups/PopupTest';
 import StaffDashboard from './pages/StaffDashboard';
+import ModifyBorrowStatus from './popups/ModifyBorrowStatus';
 
 function App() {
     const [user, setUser] = useState(null);
@@ -43,7 +44,7 @@ function App() {
     }
     return (
         <>
-        <Button onClick={test}>Test Button</Button>
+        <Navbar />
 <BrowserRouter>
 <Routes>
     <Route element={user? <Navbar /> : <Navigate to="/login" replace />} >
@@ -58,6 +59,12 @@ function App() {
     <Route path="/borrow" element={<BorrowOptions />} />
     <Route path="/popup" element={<PopupTest />} />
     <Route path="/staff" element={<StaffDashboard />} />
+    <Route path="/rentals" element={<Rentals />} />
+
+
+    <Route path="/modify" element={<ModifyBorrowStatus />} />
+
+    
 </Routes>
 </BrowserRouter>
         </>

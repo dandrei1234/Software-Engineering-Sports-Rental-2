@@ -40,6 +40,7 @@ export default function Login({setUser, setRole}) {
 
         try {
             const response = await axios.post('http://localhost:1337/users/login', formData);
+            
             setUser(response.data.name);
             localStorage.setItem('user', JSON.stringify(response.data.name));
             localStorage.setItem('isStaff', JSON.stringify(response.data.role));

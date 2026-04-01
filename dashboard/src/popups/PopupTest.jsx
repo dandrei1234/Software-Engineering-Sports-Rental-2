@@ -7,6 +7,11 @@ function PopupTest() {
 
     const [rentals, setRentals] = useState([]);
 
+    const [data, setData] = useState({
+        rentalId: -1,
+        borrow_status: 'Pending'
+    });
+
     function rental(
         itemID, equipment_name,
         userID, quantity) {
@@ -32,18 +37,23 @@ function PopupTest() {
                 open={open}
                 setOpen={setOpen} /> */}
             
-
+{/* 
             <Popup
                 borrow
                 open={open}
                 setOpen={setOpen}
-                data={{}} />
+                data={{}} /> */}
+
+            <Popup
+                modifyBorrowStatus
+                data={data}
+                open={open}
+                setOpen={setOpen} />
 
             <Stack direction="row" spacing={2}>
                 <Button onClick={() =>
                     rental(1, 'Volleyball (Mikasa)', 1, 10)
                 }>
-
 
                 </Button>
             </Stack>
