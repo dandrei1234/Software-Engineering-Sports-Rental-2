@@ -1,123 +1,128 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-
 import {
-  Box, Card, CardContent,
-  Typography, FormControl, InputLabel,
-  OutlinedInput, InputAdornment, IconButton,
-  Button, Link }
-from "@mui/material";
+  Box, Card, CardContent, Typography, FormControl,
+  InputLabel, OutlinedInput, InputAdornment,
+  IconButton, Button, Link
+} from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 import styles from "./styles";
 import DisplayMessage from "./DisplayMessage";
 
-export default function Signup({setUser}) {
-    const navigate = useNavigate();
+export default function Signup({ setUser }) {
+  const navigate = useNavigate();
 
-    const [showPassword, setShowPassword] = useState(false);
-    const [formData, setFormData] = useState({
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: ''
+  });
+
+  const [showDialog, setShowDialog] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
+
+  const handleChange = (event) => {
+    setFormData({
+      ...formData,
+      [event.target.id]: event.target.value
+    });
+  };
+
+  const registerUser = async () => {
+    if (formData.name === "" || formData.email === "" || formData.password === "") {
+      alert("Fields must not be empty");
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:1337/users/signup', formData);
+
+      // ✅ FIXED (reset form properly)
+      setFormData({
         name: '',
         email: '',
         password: ''
-    });
-    
-    const [showDialog, setShowDialog] = useState(false);
-    const [dialogMessage, setDialogMessage] = useState("");
+      });
 
-    const handleChange = (event) => {
-        setFormData({
-            ...formData,
-            [event.target.id]: event.target.value
-        })
+      alert(response.data.message);
+
+      // optional: redirect to login after signup
+      navigate("/login");
+
+    } catch (error) {
+      alert(error.response?.data?.message || "Signup failed");
     }
+  };
 
-    const registerUser = async () => {
-        if (formData.name === "" || formData.email === "" || formData.password === "") {
-            alert("Fields must not be empty")
-            return;
-        }
-        try {
-            const response = await axios.post('http://localhost:1337/users/signup', formData);
-            setUsername('');
-            setPassword('');
+  return (
+    <>
+      <DisplayMessage open={showDialog} setOpen={setShowDialog} message={dialogMessage} />
 
-            alert(response.data.message);
-        } catch (error) {
-            alert(error.response.data.message || "Signup failed");
-        }
-    };
-    
-    return (
-        <>
-        <DisplayMessage
-            open={showDialog} setOpen={setShowDialog}
-            message={dialogMessage} />
-
-        <Box sx={styles.container}>
-    
+      <Box sx={styles.container}>
         <Card sx={styles.card}>
-        <CardContent>
+          <CardContent>
             <Typography variant="h5" align="center" gutterBottom>
-                Signup
+              Signup
             </Typography>
 
             <FormControl fullWidth margin="normal">
-                <InputLabel>Full Name</InputLabel>
-                <OutlinedInput id="name" label="Full Name" type="text"
-                    value={formData.name}
-                    onChange={handleChange} />
+              <InputLabel>Full Name</InputLabel>
+              <OutlinedInput
+                id="name"
+                label="Full Name"
+                type="text"
+                value={formData.name}
+                onChange={handleChange}
+              />
             </FormControl>
 
             <FormControl fullWidth margin="normal">
-                <InputLabel>Email</InputLabel>
-                <OutlinedInput id="email" label="Email" type="email"
-                    value={formData.email}
-                    onChange={handleChange}  />
+              <InputLabel>Email</InputLabel>
+              <OutlinedInput
+                id="email"
+                label="Email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
             </FormControl>
 
             <FormControl fullWidth margin="normal">
-                <InputLabel>Password</InputLabel>
-                <OutlinedInput
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    label="Password"
-
-                    value={formData.password}
-                    onChange={handleChange}
-
-                    endAdornment={
-                    <InputAdornment position="end">
-                    <IconButton
-                        onClick={() => setShowPassword(!showPassword)}
-                        edge="end"
-                    >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
+              <InputLabel>Password</InputLabel>
+              <OutlinedInput
+                id="password"
+                type={showPassword ? "text" : "password"}
+                label="Password"
+                value={formData.password}
+                onChange={handleChange}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
-                    </InputAdornment>
+                  </InputAdornment>
                 }
-                />
+              />
             </FormControl>
-
 
             <Button
-                variant="contained"
-                fullWidth
-                sx={styles.button}
-                onClick={registerUser}
+              variant="contained"
+              fullWidth
+              sx={styles.button}
+              onClick={registerUser}
             >
-                Sign up
+              Sign up
             </Button>
-        </CardContent>
-            <Link
-                onClick={() => navigate("/login")}
-                sx={styles.link}>
-                    Already have an account? Log in
-            </Link>
+          </CardContent>
+
+          <Link onClick={() => navigate("/login")} sx={styles.link}>
+            Already have an account? Log in
+          </Link>
         </Card>
-        </Box>
-        </>
-        
-    );
-};
+      </Box>
+    </>
+  );
+}

@@ -3,6 +3,13 @@ const cors = require('cors');
 const database = require('./database');
 
 const app = express();
+
+app.use(cors({
+    origin: 'http://localhost:5173', // Replace with your frontend URL
+    methods: ['GET', 'POST'],
+    credentials: true
+}));
+
 app.use(express.json());
 
 
@@ -26,12 +33,6 @@ rentalRoutes.setPool(database.pool);
 app.use('/rentals', rentalRoutes);
 
 // ********************************************************
-
-app.use(cors({
-    origin: 'http://localhost:5173', // Replace with your frontend URL
-    methods: ['GET', 'POST'],
-    credentials: true
-}));
 
 
 

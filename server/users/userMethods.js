@@ -28,8 +28,7 @@ exports.login = async (req, res) => {
             name: rows[0].name,
             role: rows[0].role
         });
-        
-        //console.log("Status code Q: " +res.statusCode);
+
         console.log(rows[0].role);
 
     } catch (error) {
@@ -45,34 +44,43 @@ exports.signUp = async (req, res) => {
     console.log("Email: " + email);
     console.log("Password: " + password);
 
-
     if (!name || !email || !password) {
         return res.status(400).json({ message: "Incomplete user information" });
     }
-    const simplifiedName = name.trim().toLowerCase();
+
+    // Make name consistent by trimming and lowering case for checks and insertion
+    const cleanedName = name.trim().toLowerCase();
 
     try {
-        let [matchedUserCount] = await exports.pool.execute(
-            'SELECT COUNT(email) FROM users_tbl WHERE email=?',
+        // Check if email exists
+        const [emailCheck] = await exports.pool.execute(
+            'SELECT COUNT(email) AS count FROM users_tbl WHERE email=?',
             [email]
         );
-        if (matchedUserCount[0].value > 0) {
+
+        if (emailCheck[0].count > 0) {
             return res.status(400).json({ message: "Email already exists" });
         }
 
-        [matchedUserCount] = await exports.pool.execute(
-            'SELECT COUNT(fullname) FROM users_tbl WHERE fullname=?',
-            [simplifiedName]
+        // Check if fullname exists (using cleanedName for consistent check)
+        const [nameCheck] = await exports.pool.execute(
+            'SELECT COUNT(fullname) AS count FROM users_tbl WHERE fullname=?',
+            [cleanedName]
         );
-        if (matchedUserCount[0].value > 0) {
+
+        if (nameCheck[0].count > 0) {
             return res.status(400).json({ message: "Name already exists" });
         }
 
+        // Hash password securely
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+        // Insert new user with role and status defaults (adjust if your DB requires these)
         await exports.pool.execute(
-            'INSERT INTO users_tbl (fullname, email, password) VALUES (?, ?, ?);',
-            [name.trim(), email, hashedPassword]
+            `INSERT INTO users_tbl 
+            (fullname, email, password, role, status) 
+            VALUES (?, ?, ?, 'student', 'active')`,
+            [cleanedName, email, hashedPassword]
         );
 
         res.status(201).json({ message: "User was signed up successfully!" });

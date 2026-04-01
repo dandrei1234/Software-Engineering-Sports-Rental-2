@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-
-import {Button} from "@mui/material";
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 
 import './App.css';
 import Navbar from './Navbar';
@@ -13,10 +11,21 @@ import Dashboard from './pages/Dashboard';
 import Rentals from './pages/rentals/Rentals';
 import BorrowOptions from './pages/rentals/BorrowOptions';
 
-import Popup from './popups/Popup';
 import PopupTest from './popups/PopupTest';
 import StaffDashboard from './pages/StaffDashboard';
 import ModifyBorrowStatus from './popups/ModifyBorrowStatus';
+
+// 🔹 Protected Layout (Navbar only shows when logged in)
+function ProtectedLayout({ user }) {
+    if (!user) return <Navigate to="/login" replace />;
+
+    return (
+        <>
+            <Navbar />
+            <Outlet />
+        </>
+    );
+}
 
 function App() {
     const [user, setUser] = useState(null);
@@ -29,7 +38,7 @@ function App() {
             setUser(JSON.parse(savedUser));
         }
 
-        const savedRole = localStorage.getItem('role');
+        const savedRole = localStorage.getItem('role'); // ✅ fixed key
         if (savedRole) {
             setRole(JSON.parse(savedRole));
         }
@@ -39,36 +48,27 @@ function App() {
 
     if (loading) return <div style={{ backgroundColor: '#000', height: '100vh' }}></div>;
 
-    function test() {
-        alert(user);
-    }
     return (
-        <>
-        <Navbar />
-<BrowserRouter>
-<Routes>
-    <Route element={user? <Navbar /> : <Navigate to="/login" replace />} >
-        <Route path="/" element={<Dashboard />} />
-        {/* <Route path="/rentals" element={<Rentals />} />
+        <BrowserRouter>
+            <Routes>
 
-        <Route path="/audit-log" element={<AuditLog />} /> */}
-    </Route>
+                {/* ✅ Protected routes (WITH Navbar) */}
+                <Route element={<ProtectedLayout user={user} />}>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/rentals" element={<Rentals />} />
+                    <Route path="/borrow" element={<BorrowOptions />} />
+                    <Route path="/staff" element={<StaffDashboard />} />
+                    <Route path="/popup" element={<PopupTest />} />
+                    <Route path="/modify" element={<ModifyBorrowStatus />} />
+                </Route>
 
-    <Route path="/login" element={<Login setUser={setUser} setRole={setRole} />} />
-    <Route path="/signup" element={<Signup />} />
-    <Route path="/borrow" element={<BorrowOptions />} />
-    <Route path="/popup" element={<PopupTest />} />
-    <Route path="/staff" element={<StaffDashboard />} />
-    <Route path="/rentals" element={<Rentals />} />
+                {/* ✅ Public routes (NO Navbar) */}
+                <Route path="/login" element={<Login setUser={setUser} setRole={setRole} />} />
+                <Route path="/signup" element={<Signup />} />
 
-
-    <Route path="/modify" element={<ModifyBorrowStatus />} />
-
-    
-</Routes>
-</BrowserRouter>
-        </>
-    )
+            </Routes>
+        </BrowserRouter>
+    );
 }
 
-export default App
+export default App;
