@@ -1,0 +1,9 @@
+root {
+    background-color: red;
+
+    display: grid;
+    align-items: start;
+
+    padding: 0;
+    margin: 0;
+}
