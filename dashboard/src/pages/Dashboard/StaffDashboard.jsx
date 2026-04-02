@@ -9,9 +9,10 @@
     Button,
   } from "@mui/material";
   import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
-  import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
   import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
   import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+  import SearchIcon from "@mui/icons-material/Search";
+
   import Popup from '../../popups/Popup';
   import Rentals from '../rentals/Rentals';
 
@@ -47,6 +48,15 @@
 
     return (
       <>
+      <Box sx={{
+        marginTop: '68px',
+        padding: '20px',
+        gap: '20px',
+
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "flex-start",
+      }}>
         <Popup rentalSearch open={openRentalSearch} setOpen={setOpen} setData={setRentals} />
         
         
@@ -96,17 +106,22 @@
         </Grid>
 
         <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setOpen(true)}
-          sx={{height: '30px'}}  
-        >
-          Search
-        </Button>
+            variant="contained"
+            color="primary"
+            startIcon={<SearchIcon />}
+            onClick={() => setOpen(true)}
+            sx={{
+              width: '120px'}}  
+            >
+            Search
+          </Button>
+
         
         <Rentals
             data={rentals}
             setData={setRentals}/>
+      </Box>
+        
       </>
     );
   }
