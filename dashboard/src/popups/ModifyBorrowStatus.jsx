@@ -46,6 +46,7 @@ export default function ModifyBorrowStatus({data, close, refresh, displaySuccess
       <MenuItem value="Pending">Pending</MenuItem>
       <MenuItem value="Returned">Returned</MenuItem>
       <MenuItem value="Approved">Approved</MenuItem>
+      <MenuItem value="Rejected">Rejected</MenuItem>
     </Select>
     </FormControl>
 

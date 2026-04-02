@@ -101,7 +101,9 @@ const Rentals = () => {
                     }}>{buttonLabel}</MyButton>
                 </>
             );
-        } else if (rental.borrow_status === 'Overdue') {
+        } else if (
+            rental.borrow_status === 'Overdue' || 
+            rental.borrow_status === 'Rejected' ) {
             return (
                 <>
                 <RedButton
@@ -146,7 +148,9 @@ const Rentals = () => {
                         <TableRow>
                             <TableCell align="center">ID</TableCell>
                             <TableCell align="center">Equipment Name</TableCell>
-                            <TableCell>Dates</TableCell>
+                            <TableCell align="center">Borrower</TableCell>
+                            <TableCell align="center">Available<br/>Quantity</TableCell>
+                            <TableCell align="center">Dates</TableCell>
                             <TableCell align="center">Actions<br/><small>(Click to change)</small></TableCell>
                             <TableCell></TableCell>
                         </TableRow>
@@ -157,6 +161,8 @@ const Rentals = () => {
                             <TableRow key={index}>
                                 <TableCell>{rental.rentalID}</TableCell>
                                 <TableCell>{rental.equipment_name}</TableCell>
+                                <TableCell>{rental.user}</TableCell>
+                                <TableCell align="center">{rental.available_quantity}</TableCell>
                                 <TableCell sx={{fontSize: '12px', minWidth: '150px'}}>
                                     {dueDate(rental)}
                                     {returnDate(rental)}

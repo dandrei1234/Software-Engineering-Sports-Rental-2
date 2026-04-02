@@ -6,12 +6,14 @@ exports.viewSummary = async (req, res) => {
         console.log("data: " + userID);
     
         const [rows] = await exports.pool.query(`
-SELECT R.rentalID, E.equipmentID, E.equipment_name, I.available_quantity, r.borrow_status, R.request_date, R.due_date, R.return_date AS quantity, I.itemID
+SELECT R.rentalID, U.fullname AS user, E.equipmentID, E.equipment_name, I.available_quantity, r.borrow_status, R.request_date, R.due_date, R.return_date AS quantity, I.itemID
 FROM rentals_tbl AS R
 LEFT JOIN rental_items_tbl AS I
 	ON R.itemID = I.itemID
 LEFT JOIN equipment_tbl AS E
-	ON I.equipmentID = E.equipmentID;`);
+	ON I.equipmentID = E.equipmentID
+LEFT JOIN users_tbl AS U
+	ON R.userID = U.userID;`);
     console.log("1st success");
 
     await exports.pool.execute(`
