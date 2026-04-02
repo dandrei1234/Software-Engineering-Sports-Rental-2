@@ -3,24 +3,24 @@ exports.pool = null;
 exports.viewSummary = async (req, res) => {
     const { userID } = req.body;
     try {
-        console.log("data: " + userID);
-    
         const [rows] = await exports.pool.query(`
-SELECT R.rentalID, U.fullname AS user, E.equipmentID, E.equipment_name, I.available_quantity, r.borrow_status, R.request_date, R.due_date, R.return_date AS quantity, I.itemID
+SELECT R.rentalID, U.fullname AS user, E.equipmentID, E.equipment_name, I.available_quantity AS quantity, r.borrow_status, R.request_date, R.due_date, R.return_date, I.itemID, C.category_name
 FROM rentals_tbl AS R
 LEFT JOIN rental_items_tbl AS I
 	ON R.itemID = I.itemID
 LEFT JOIN equipment_tbl AS E
 	ON I.equipmentID = E.equipmentID
 LEFT JOIN users_tbl AS U
-	ON R.userID = U.userID;`);
-    console.log("1st success");
+	ON R.userID = U.userID
+LEFT JOIN equipment_category_tbl AS C
+	ON E.categoryID = C.categoryID`);
+    console.log(rows);
 
     await exports.pool.execute(`
 INSERT INTO audit_log_tbl
 (userID, action_type, action_details)
 VALUES
-(?, "Viewed Rentals", "The following were viewed: rentalID, equipmentID, equipment_name. available_quantity, borrow_status, request_date, due_date, return_date, itemID From tables: rentals_tbl, rental_items_tbl, equipment_tbl");
+(?, "Viewed Rentals", "The following were viewed: R.rentalID, U.fullname AS user, E.equipmentID, E.equipment_name, I.available_quantity AS quantity, r.borrow_status, R.request_date, R.due_date, R.return_date, I.itemID, C.category_name");
         `,
             [userID]);
 

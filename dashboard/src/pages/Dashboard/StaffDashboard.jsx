@@ -42,12 +42,15 @@
 
   export default function StaffDashboard() {
     const [openRentalSearch, setOpen] = useState(false);
+    const [rentals, setRentals] = useState([]);
     const [data, setData] = useState([]);
 
     return (
       <>
-        <Popup rentalSearch open={openRentalSearch} setOpen={setOpen} setData={setData} />
-        <RentalSearchTable data = {data} />
+        <Popup rentalSearch open={openRentalSearch} setOpen={setOpen} setData={setRentals} />
+        
+        
+        {/* <RentalSearchTable data = {data} /> */}
 
         <Grid container spacing={3}>
           {cards.map((card, index) => (
@@ -100,8 +103,10 @@
         >
           Search
         </Button>
-
-        <Rentals/>
+        
+        <Rentals
+            data={rentals}
+            setData={setRentals}/>
       </>
     );
   }

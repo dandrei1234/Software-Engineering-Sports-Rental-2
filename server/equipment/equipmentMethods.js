@@ -68,14 +68,28 @@ exports.searchEquipment = async (req, res) => {
 
         if (conditions.length > 0) {
             let query = `
-SELECT R.*, E.equipment_name, C.category_name
-FROM equipment_category_tbl AS C
-JOIN equipment_tbl AS E
-    ON E.categoryID = C.categoryID
-JOIN rental_items_tbl AS I
-	ON I.equipmentID = E.equipmentID
-JOIN rentals_tbl AS R
+SELECT
+	R.rentalID,
+    U.fullname AS user,
+    E.equipmentID,
+    E.equipment_name,
+    I.available_quantity AS quantity,
+    R.borrow_status,
+    R.condition_status,
+    R.request_date,
+    R.due_date,
+    R.return_date,
+    I.itemID,
+    C.category_name
+FROM rentals_tbl AS R
+LEFT JOIN rental_items_tbl AS I
 	ON R.itemID = I.itemID
+LEFT JOIN equipment_tbl AS E
+	ON I.equipmentID = E.equipmentID
+LEFT JOIN users_tbl AS U
+	ON R.userID = U.userID
+LEFT JOIN equipment_category_tbl AS C
+	ON E.categoryID = C.categoryID
 WHERE `;
 
                 for (let i = 0; i < conditions.length; i++) {

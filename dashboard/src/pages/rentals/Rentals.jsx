@@ -5,10 +5,8 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from
 
 import { CardTitle, StyledCard, MyButton, RedButton, OrangeButton } from '../../popups/Styles';
 import Popup from '../../popups/Popup'
-const Rentals = () => {
-    const [rentals, setRentals] = useState([]);
+const Rentals = ({data, setData}) => {
     const [open, setOpen] = useState(false);
-
     const [currentRental, setCurrentRental] = useState(null);
 
     useEffect(() => {
@@ -24,24 +22,7 @@ const Rentals = () => {
         const response = await axios.post(
             'http://localhost:1337/rentals/view', data
         );
-        setRentals(response.data);
-
-
-        // alert("Id: " + localStorage.getItem('id'));
-        // axios
-        //     .get("http://localhost:1337/rentals/view", {
-        //         headers: {
-        //             'Authorization': 'Test'
-        //         },
-        //         params: {
-        //             userID: localStorage.getItem('id')
-        //         }})
-        //     .then((response) => {
-        //         setRentals(response.data);
-        //     })
-        //     .catch((error) => {
-        //         console.error(error);
-        //     });
+        setData(response.data);
     }
 
     function convertToDate(jDate)
@@ -80,8 +61,8 @@ const Rentals = () => {
 
     function onBorrowStatusClicked(index) {
         setCurrentRental({
-            rentalID: rentals[index].rentalID,
-            borrow_status: rentals[index].borrow_status
+            rentalID: data[index].rentalID,
+            borrow_status: data[index].borrow_status
         });
         setOpen(true);
     }
@@ -126,19 +107,15 @@ const Rentals = () => {
                 </>
             );
         }
-
-        
     }
+
     return (
-        <>
-        {rentals? 
-        <Popup
+        <><Popup
             modifyBorrowStatus
             data={currentRental}
             refresh={viewRentals}
             open={open}
             setOpen={setOpen} />
-        : null }
 
         <StyledCard sx={{minWidth: '600px'}}>
             <CardTitle title="Rentals" />
@@ -157,12 +134,12 @@ const Rentals = () => {
                     </TableHead>
 
                     <TableBody>
-                        {rentals.map((rental, index) => (
+                        {data.map((rental, index) => (
                             <TableRow key={index}>
                                 <TableCell>{rental.rentalID}</TableCell>
                                 <TableCell>{rental.equipment_name}</TableCell>
                                 <TableCell>{rental.user}</TableCell>
-                                <TableCell align="center">{rental.available_quantity}</TableCell>
+                                <TableCell align="center">{rental.quantity}</TableCell>
                                 <TableCell sx={{fontSize: '12px', minWidth: '150px'}}>
                                     {dueDate(rental)}
                                     {returnDate(rental)}

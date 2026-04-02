@@ -29,7 +29,7 @@ export function Popup2({ open, setOpen }) {
 }
 
 export default function Popup({
-    open, setOpen, data,
+    open, setOpen, data, setData,
 
     addEquipment,
 
@@ -43,8 +43,6 @@ export default function Popup({
     const [secondaryMessage, setSecondaryMessage] = useState('');
     const [secondaryTitle, setSecondaryTitle] = useState('');
     const [dialogError, setDialogError] = useState(false);
-    
-    const [rentals, setRentals] = useState([]);
 
     const handleClose = () => {
         setOpen(false);
@@ -80,7 +78,7 @@ export default function Popup({
             return (
                 <RentalSearchPopup
                     close={handleClose}
-                    setData={setRentals} />
+                    setData={setData} />
             );
         }
         if (borrow) {
@@ -142,7 +140,7 @@ export default function Popup({
       </Dialog>
 
 
-          <RentalSearchTable data={rentals} />
+          {/* <RentalSearchTable data={rentals} /> */}
       </>
     );
 }

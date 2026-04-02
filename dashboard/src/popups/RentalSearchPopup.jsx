@@ -17,12 +17,9 @@ const RentalSearchPopup = ({close, setData}) => {
   });
   const [equipCategoriesIds, setEquipCategoriesIds] = useState([]);
   const [equipCategoriesNames, setEquipCategoriesNames] = useState([]);
-  const [selectCategory, setSelectCategory] = useState('');
-
-//   const [data, setData] = useState([]);
 
   const conditionStatus = [ 'New', 'Good', 'Fair', 'Damaged'];
-  const borrowStatus = [ 'Pending', 'Approved', 'Returned', 'Overdue'];
+  const borrowStatus = [ 'Pending', 'Approved', 'Returned', 'Overdue','Rejected'];
 
   useEffect(() => {
       getCategories();
@@ -63,13 +60,17 @@ const RentalSearchPopup = ({close, setData}) => {
 
 
     const onSearch = async () => {
-      const response = await axios.post(`http://localhost:1337/equipment/search`, {
-        equipment_name: formData.equipment_name,
-        categoryID: formData.categoryID,
-        condition_status: formData.condition_status,
-        borrow_status: formData.borrow_status
-      });
-      setData(response.data);
+      try {
+        const response = await axios.post(`http://localhost:1337/equipment/search`, {
+          equipment_name: formData.equipment_name,
+          categoryID: formData.categoryID,
+          condition_status: formData.condition_status,
+          borrow_status: formData.borrow_status
+        });
+        setData(response.data);
+      } catch (error) {
+          alert(error.message);
+      }
     }
 
   return (
