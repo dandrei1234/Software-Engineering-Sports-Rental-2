@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   List,
@@ -11,13 +12,11 @@ import {
 const sidebarWidth = 240;
 
 const Sidebar = () => {
+  const navigate = useNavigate();
   const [activeItem, setActiveItem] = useState("Dashboard");
   const [menuItems, setMenuItems] = useState([
-    { text: "Dashboard", path: "/dashboard" },
-    { text: "Users", path: "/users" },
-    { text: "Settings", path: "/settings" },
-    { text: "Reports", path: "/reports" },
-    { text: "Logout", path: "/logout" },
+    { text: "Dashboard", path: "/dashboard",  },
+    { text: "Audit Log", path: "/auditlog",  },
   ]);
 
   return (
@@ -39,11 +38,11 @@ const Sidebar = () => {
       <List>
         {menuItems.map((item) => {
           const isActive = activeItem === item.text;
-
+          const role = localStorage.getItem('role')
           return (
             <ListItem key={item.text} disablePadding>
               <ListItemButton
-                onClick={() => setActiveItem(item.text)}
+                onClick={() => navigate(item.path)}
                 sx={{
                   bgcolor: isActive ? "primary.main" : "transparent",
                   color: isActive ? "white" : "text.primary",

@@ -55,7 +55,7 @@ exports.searchEquipment = async (req, res) => {
         }
         if (categoryID) {
             conditions.push("E.categoryID=?")
-            values.push(categoryID)
+            values.push(categoryID) // to do: convert string to categoryID (int)
         }
         if (condition_status) {
             conditions.push("R.condition_status=?")
@@ -68,14 +68,14 @@ exports.searchEquipment = async (req, res) => {
 
         if (conditions.length > 0) {
             let query = `
-SELECT 
-    R.*, E.equipment_name,
-    C.category_name
+SELECT R.*, E.equipment_name, C.category_name
 FROM equipment_category_tbl AS C
 JOIN equipment_tbl AS E
     ON E.categoryID = C.categoryID
-JOIN rentals_tbl AS R 
-    ON E.equipmentID = R.equipmentID
+JOIN rental_items_tbl AS I
+	ON I.equipmentID = E.equipmentID
+JOIN rentals_tbl AS R
+	ON R.itemID = I.itemID
 WHERE `;
 
                 for (let i = 0; i < conditions.length; i++) {

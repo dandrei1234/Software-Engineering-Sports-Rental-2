@@ -11,26 +11,37 @@ const Rentals = () => {
 
     const [currentRental, setCurrentRental] = useState(null);
 
-    const [equipment, setEquipment] = useState([
-        { equipmentID: 0, equipment_name: 'N/A' },
-        { equipmentID: 1, equipment_name: 'Basketball (Spalding)' },
-        { equipmentID: 2, equipment_name: 'Volleyball (Mikasa)' },
-    ]);
-
     useEffect(() => {
         viewRentals();
     }, []);
 
     async function viewRentals() {
-        axios
-            .get("http://localhost:1337/rentals/view")
-            .then((response) => {
-                setRentals(response.data);
-                
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+    
+        const data = {
+            userID: localStorage.getItem('id')
+        };
+        
+        const response = await axios.post(
+            'http://localhost:1337/rentals/view', data
+        );
+        setRentals(response.data);
+
+
+        // alert("Id: " + localStorage.getItem('id'));
+        // axios
+        //     .get("http://localhost:1337/rentals/view", {
+        //         headers: {
+        //             'Authorization': 'Test'
+        //         },
+        //         params: {
+        //             userID: localStorage.getItem('id')
+        //         }})
+        //     .then((response) => {
+        //         setRentals(response.data);
+        //     })
+        //     .catch((error) => {
+        //         console.error(error);
+        //     });
     }
 
     function convertToDate(jDate)

@@ -42,6 +42,7 @@ export default function Login({ setUser, setRole }) {
       setUser(response.data.name);
       setRole(response.data.role);
 
+      localStorage.setItem('id', JSON.stringify(response.data.id));
       localStorage.setItem('user', JSON.stringify(response.data.name));
       localStorage.setItem('role', JSON.stringify(response.data.role)); // ✅ FIXED
 

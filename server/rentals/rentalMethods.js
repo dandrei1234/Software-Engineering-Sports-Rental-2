@@ -1,21 +1,40 @@
 exports.pool = null;
 
 exports.viewSummary = async (req, res) => {
+    const { userID } = req.body;
     try {
+        console.log("data: " + userID);
+    
         const [rows] = await exports.pool.query(`
 SELECT R.rentalID, E.equipmentID, E.equipment_name, I.available_quantity, r.borrow_status, R.request_date, R.due_date, R.return_date AS quantity, I.itemID
 FROM rentals_tbl AS R
 LEFT JOIN rental_items_tbl AS I
 	ON R.itemID = I.itemID
 LEFT JOIN equipment_tbl AS E
-	ON I.equipmentID = E.equipmentID`);
+	ON I.equipmentID = E.equipmentID;`);
+    console.log("1st success");
+
+    await exports.pool.execute(`
+INSERT INTO audit_log_tbl
+(userID, action_type, action_details)
+VALUES
+(?, "Viewed Rentals", "The following were viewed: rentalID, equipmentID, equipment_name. available_quantity, borrow_status, request_date, due_date, return_date, itemID From tables: rentals_tbl, rental_items_tbl, equipment_tbl");
+        `,
+            [userID]);
 
         // console.log(rows);
         res.status(200).json(rows);
 
-
     } catch (error) {
         res.status(500).json({ message: "Server Error", details: error.message });
+        // res.status(500).json({ message: "Server Error", details: error.message });
+        
+    await exports.pool.execute(`
+INSERT INTO audit_log_tbl
+(userID, action_type, action_details)
+VALUES
+(?, "Error Viewing Rentals", "Failed in retrieving rentals");
+        `, [userID]);
     }
 };
 

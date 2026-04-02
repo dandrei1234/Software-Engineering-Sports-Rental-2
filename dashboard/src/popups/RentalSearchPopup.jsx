@@ -62,15 +62,15 @@ const RentalSearchPopup = ({close, setData}) => {
 
 
 
-  const onSearch = async () => {
-    const response = await axios.post(`http://localhost:1337/equipment/search`, {
-      equipment_name: formData.equipment_name,
-      categoryID: formData.categoryID,
-      condition_status: formData.condition_status,
-      borrow_status: formData.borrow_status
-    });
-    setData(response.data);
-  }
+    const onSearch = async () => {
+      const response = await axios.post(`http://localhost:1337/equipment/search`, {
+        equipment_name: formData.equipment_name,
+        categoryID: formData.categoryID,
+        condition_status: formData.condition_status,
+        borrow_status: formData.borrow_status
+      });
+      setData(response.data);
+    }
 
   return (
     <>

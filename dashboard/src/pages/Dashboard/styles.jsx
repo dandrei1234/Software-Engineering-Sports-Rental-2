@@ -1,8 +1,6 @@
-import { Height } from "@mui/icons-material";
-
 const styles = ({
     
-    container: {
+    card: {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -21,43 +19,41 @@ const styles = ({
             sm: 0,  // mobile portrait
         },
     },
-
-    card: {
-        width: '30vw',
-        height: '70vh',
-        padding: 2,
-        borderRadius: 3,
+    
+    content: {
         width: {
             xs: '100%',   // mobile landscape
             sm: '100%',  // mobile portrait
+            md: '50%',
         },
         padding: {
             xs: 0,   // mobile landscape
             sm: 0,  // mobile portrait
-            md: 2,
         },
         margin: {
-            xs: '30px',   // mobile landscape
+            xs: 0,   // mobile landscape
             sm: 0,  // mobile portrait
-            md: 2,
         },
     },
-    button: {
-        mt: 2,
-        borderRadius: 2
+    table: {
+        width: {
+            xs: 0,   // mobile landscape
+            sm: 0,  // mobile portrait
+        },
+        paddingLeft: {
+            xs: 0,   // mobile landscape
+            sm: 0,  // mobile portrait
+        },
+        paddingRight: {
+            xs: 0,   // mobile landscape
+            sm: 0,  // mobile portrait
+        },
+        margin: {
+            xs: 0,   // mobile landscape
+            sm: 0,  // mobile portrait
+        },
     },
-    optionsRow: {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        mt: 1
-    },
-    link: {
-        cursor: 'pointer',
-        '&:hover': {
-            cursor: 'hand',
-        }
-    }
+
 });
 
 export default styles;

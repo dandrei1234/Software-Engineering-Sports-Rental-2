@@ -11,7 +11,7 @@ exports.login = async (req, res) => {
     }
 
     try {
-        const [rows] = await exports.pool.execute('SELECT fullname AS name, email, role, password FROM users_tbl WHERE email=?', [email]);
+        const [rows] = await exports.pool.execute('SELECT userID, fullname AS name, email, role, password FROM users_tbl WHERE email=?', [email]);
 
         if (!rows[0]) {
             return res.status(401).json({ message: "Invalid email or password" });
@@ -25,6 +25,7 @@ exports.login = async (req, res) => {
 
         res.status(200).json({
             message: "Login successful",
+            id: rows[0].userID,
             name: rows[0].name,
             role: rows[0].role
         });
@@ -78,8 +79,8 @@ exports.signUp = async (req, res) => {
         // Insert new user with role and status defaults (adjust if your DB requires these)
         await exports.pool.execute(
             `INSERT INTO users_tbl 
-            (fullname, email, password, role, status) 
-            VALUES (?, ?, ?, 'student', 'active')`,
+            (fullname, email, password, role) 
+            VALUES (?, ?, ?, 'student')`,
             [cleanedName, email, hashedPassword]
         );
 

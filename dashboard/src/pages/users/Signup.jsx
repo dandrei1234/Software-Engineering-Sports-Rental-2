@@ -15,7 +15,14 @@ export default function Signup({ setUser }) {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
+
   const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: ''
+  });
+
+  const [errors, setErrors] = useState({
     name: '',
     email: '',
     password: ''
@@ -29,37 +36,91 @@ export default function Signup({ setUser }) {
       ...formData,
       [event.target.id]: event.target.value
     });
+
+    // Clear error when typing
+    setErrors({
+      ...errors,
+      [event.target.id]: ''
+    });
+  };
+
+  const validateForm = () => {
+    let newErrors = {
+      name: '',
+      email: '',
+      password: ''
+    };
+
+    let isValid = true;
+
+    // Name validation
+    if (!formData.name.trim()) {
+      newErrors.name = "Full name is required";
+      isValid = false;
+    }
+
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email) {
+      newErrors.email = "Email is required";
+      isValid = false;
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Invalid email format";
+      isValid = false;
+    }
+
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+      isValid = false;
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
   };
 
   const registerUser = async () => {
-    if (formData.name === "" || formData.email === "" || formData.password === "") {
-      alert("Fields must not be empty");
-      return;
-    }
+    if (!validateForm()) return;
 
     try {
-      const response = await axios.post('http://localhost:1337/users/signup', formData);
+      const response = await axios.post(
+        'http://localhost:1337/users/signup',
+        formData
+      );
 
-      // ✅ FIXED (reset form properly)
+      // Reset form
       setFormData({
         name: '',
         email: '',
         password: ''
       });
 
-      alert(response.data.message);
+      setDialogMessage(response.data.message);
+      setShowDialog(true);
 
-      // optional: redirect to login after signup
-      navigate("/login");
+      // Redirect after short delay
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
 
     } catch (error) {
-      alert(error.response?.data?.message || "Signup failed");
+      setDialogMessage(
+        error.response?.data?.message || "Signup failed"
+      );
+      setShowDialog(true);
     }
   };
 
   return (
     <>
-      <DisplayMessage open={showDialog} setOpen={setShowDialog} message={dialogMessage} />
+      <DisplayMessage
+        open={showDialog}
+        setOpen={setShowDialog}
+        message={dialogMessage}
+      />
 
       <Box sx={styles.container}>
         <Card sx={styles.card}>
@@ -68,7 +129,8 @@ export default function Signup({ setUser }) {
               Signup
             </Typography>
 
-            <FormControl fullWidth margin="normal">
+            {/* Name */}
+            <FormControl fullWidth margin="normal" error={!!errors.name}>
               <InputLabel>Full Name</InputLabel>
               <OutlinedInput
                 id="name"
@@ -77,9 +139,13 @@ export default function Signup({ setUser }) {
                 value={formData.name}
                 onChange={handleChange}
               />
+              <Typography color="error" variant="caption">
+                {errors.name}
+              </Typography>
             </FormControl>
 
-            <FormControl fullWidth margin="normal">
+            {/* Email */}
+            <FormControl fullWidth margin="normal" error={!!errors.email}>
               <InputLabel>Email</InputLabel>
               <OutlinedInput
                 id="email"
@@ -88,9 +154,13 @@ export default function Signup({ setUser }) {
                 value={formData.email}
                 onChange={handleChange}
               />
+              <Typography color="error" variant="caption">
+                {errors.email}
+              </Typography>
             </FormControl>
 
-            <FormControl fullWidth margin="normal">
+            {/* Password */}
+            <FormControl fullWidth margin="normal" error={!!errors.password}>
               <InputLabel>Password</InputLabel>
               <OutlinedInput
                 id="password"
@@ -100,12 +170,18 @@ export default function Signup({ setUser }) {
                 onChange={handleChange}
                 endAdornment={
                   <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                    <IconButton
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
+                    >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
                 }
               />
+              <Typography color="error" variant="caption">
+                {errors.password}
+              </Typography>
             </FormControl>
 
             <Button

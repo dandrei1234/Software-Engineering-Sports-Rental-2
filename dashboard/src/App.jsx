@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
-
 import './App.css';
 import Navbar from './Navbar';
 
 import Login from './pages/users/Login';
 import Signup from './pages/users/Signup';
 
-import Dashboard from './pages/Dashboard';
 import Rentals from './pages/rentals/Rentals';
 import BorrowOptions from './pages/rentals/BorrowOptions';
 
 import PopupTest from './popups/PopupTest';
-import StaffDashboard from './pages/StaffDashboard';
+import StaffDashboard from './pages/Dashboard/StaffDashboard';
+import StudentDashboard from './pages/Dashboard/StudentDashboard';
 import ModifyBorrowStatus from './popups/ModifyBorrowStatus';
+import AuditLog from './pages/AuditLog';
 
 // 🔹 Protected Layout (Navbar only shows when logged in)
 function ProtectedLayout({ user }) {
@@ -51,21 +51,55 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
+                <Route
+                    path="/"
+                    element={
+                        user ? (
+                            role === "student" ? (
+                                <Navigate to="/student" replace />
+                            ) : (
+                                <Navigate to="/staff" replace />
+                            )
+                        ) : (
+                            <Navigate to="/login" replace />
+                        )
+                    }
+                />
 
-                {/* ✅ Protected routes (WITH Navbar) */}
                 <Route element={<ProtectedLayout user={user} />}>
-                    <Route path="/" element={<Dashboard />} />
+                    {/* <Route path="/" element={<Dashboard />} /> */}
                     <Route path="/rentals" element={<Rentals />} />
                     <Route path="/borrow" element={<BorrowOptions />} />
-                    <Route path="/staff" element={<StaffDashboard />} />
-                    <Route path="/popup" element={<PopupTest />} />
-                    <Route path="/modify" element={<ModifyBorrowStatus />} />
+
+                    <Route
+                        path="/staff"
+                        element={
+                            role === "staff" ? (
+                                <StaffDashboard />
+                            ) : (
+                                <Navigate to="/student" replace />
+                            )
+                        }
+                    />
+                    <Route
+                        path="/student"
+                        element={
+                            role === "student" ? (
+                                <StudentDashboard />
+                            ) : (
+                                <Navigate to="/staff" replace />
+                            )
+                        }
+                    />
+
+                    <Route path="/audit" element={<AuditLog />} />
                 </Route>
 
                 {/* ✅ Public routes (NO Navbar) */}
                 <Route path="/login" element={<Login setUser={setUser} setRole={setRole} />} />
                 <Route path="/signup" element={<Signup />} />
 
+                {/* <Route path="/popup" element={<PopupTest />} /> */}
             </Routes>
         </BrowserRouter>
     );
