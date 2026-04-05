@@ -70,11 +70,17 @@ export default function Signup({ setUser }) {
     }
 
     // Password validation
-    if (!formData.password) {
+      if (!formData.password) {
       newErrors.password = "Password is required";
       isValid = false;
     } else if (formData.password.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
+      isValid = false;
+    } else if (!/[A-Z]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least 1 uppercase letter";
+      isValid = false;
+    } else if (!/\d/.test(formData.password)) {
+      newErrors.password = "Password must contain at least 1 number";
       isValid = false;
     }
 
