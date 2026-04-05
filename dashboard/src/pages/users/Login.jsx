@@ -16,7 +16,7 @@ export default function Login({ setUser, setRole }) {
 
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    email: 'user@smu.edu.ph',
+    email: '',
     password: ''
   });
 
