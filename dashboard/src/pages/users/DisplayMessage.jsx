@@ -1,30 +1,37 @@
 import {
   Dialog, DialogTitle, DialogContent,
-  DialogContentText, DialogActions, Button }
-from "@mui/material";
+  DialogContentText, DialogActions, Button
+} from "@mui/material";
 
-export default function DisplayMessage({open, setOpen, message}) {
-    function handleClose() {
-        setOpen(false);
-    };
+export default function DisplayMessage({ open, setOpen, message }) {
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-    return (
-        <>
-    <Dialog open={open} onClose={handleClose}>
-    <DialogTitle>Hello</DialogTitle>
+  return (
+    <Dialog 
+      open={open} 
+      onClose={handleClose}
+      // This prop prevents the focus conflict with the underlying page
+      disableRestoreFocus
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">
+        {"Notification"}
+      </DialogTitle>
 
-    <DialogContent>
-        <DialogContentText>
-            {message}
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          {message}
         </DialogContentText>
-    </DialogContent>
+      </DialogContent>
 
-    <DialogActions>
+      <DialogActions>
         <Button onClick={handleClose} autoFocus>
-            Okay
+          Okay
         </Button>
-    </DialogActions>
+      </DialogActions>
     </Dialog>
-        </>
-    );
+  );
 }

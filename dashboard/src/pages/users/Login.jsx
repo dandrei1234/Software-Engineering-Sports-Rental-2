@@ -37,7 +37,7 @@ export default function Login({ setUser, setRole }) {
     }
 
     try {
-      const response = await axios.post('http://localhost:1337/users/login', formData);
+      const response = await axios.post('/api/users/login', formData);
 
       setUser(response.data.name);
       setRole(response.data.role);
