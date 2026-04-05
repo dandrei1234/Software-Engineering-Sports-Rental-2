@@ -194,9 +194,11 @@ export default function Signup({ setUser }) {
             </Button>
           </CardContent>
 
-          <Link onClick={() => navigate("/login")} sx={styles.link}>
-            Already have an account? Log in
-          </Link>
+          <Box textAlign="center" mt={2}>
+              <Link onClick={() => navigate("/login")} sx={styles.link}>
+                Already have an account? Log in
+              </Link>
+          </Box>
         </Card>
       </Box>
     </>

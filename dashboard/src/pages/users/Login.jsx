@@ -103,9 +103,11 @@ export default function Login({ setUser, setRole }) {
             </Button>
           </CardContent>
 
-          <Link onClick={() => navigate("/signup")} sx={styles.link}>
-            Don't have an account? Sign up
-          </Link>
+          <Box textAlign="center" mt={2}>
+            <Link onClick={() => navigate("/signup")} sx={styles.link}>
+                Don't have an account? Sign up
+            </Link>
+          </Box>
         </Card>
       </Box>
     </>
